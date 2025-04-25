@@ -211,24 +211,24 @@ class CarSpecificEvents:
       if b.type == ButtonType.cancel and (allow_button_cancel or not self.CP.pcmCruise):
         events.add(EventName.buttonCancel)
 
-    # Handle permanent and temporary steering faults
-    self.steering_unpressed = 0 if CS.steeringPressed else self.steering_unpressed + 1
-    if CS.steerFaultTemporary:
-      if CS.steeringPressed and (not CS_prev.steerFaultTemporary or self.no_steer_warning):
-        self.no_steer_warning = True
-      else:
-        self.no_steer_warning = False
+    # Handle permanent and temporary steering faults : 스티어링을 잡지 않으면 카운트가 증가하는 형대
+    #self.steering_unpressed = 0 if CS.steeringPressed else self.steering_unpressed + 1
+    #if CS.steerFaultTemporary:
+    #  if CS.steeringPressed and (not CS_prev.steerFaultTemporary or self.no_steer_warning):
+    #    self.no_steer_warning = True
+    #  else:
+    #    self.no_steer_warning = False
 
         # if the user overrode recently, show a less harsh alert
-        if self.silent_steer_warning or CS.standstill or self.steering_unpressed < int(1.5 / DT_CTRL):
-          self.silent_steer_warning = True
-          events.add(EventName.steerTempUnavailableSilent)
-        else:
-          events.add(EventName.steerTempUnavailable)
-    else:
-      self.no_steer_warning = False
-      self.silent_steer_warning = False
-    if CS.steerFaultPermanent:
+    #    if self.silent_steer_warning or CS.standstill or self.steering_unpressed < int(1.5 / DT_CTRL):
+    #      self.silent_steer_warning = True
+    #      events.add(EventName.steerTempUnavailableSilent)
+    #    else:
+    #      events.add(EventName.steerTempUnavailable)
+    #else:
+    #  self.no_steer_warning = False
+    #  self.silent_steer_warning = False
+    if CS.steerFaultPermanent: #시스템 오류/하드웨어 결합시 발생
       events.add(EventName.steerUnavailable)
 
     # we engage when pcm is active (rising edge)
